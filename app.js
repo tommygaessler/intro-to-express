@@ -68,15 +68,31 @@ app.get('/hello/:key/:key2', function(req, res, next) {
   res.status(202).send('hi ' + req.params.key + ' and ' + req.params.key2);
 });
 
-var friends = [];
-app.post('/friends', function (req, res, next) {
+var store = [];
+app.post('/vegetables', function (req, res, next) {
   var body = [];
   req.on('data', function (chunk) {
     body.push(chunk.toString());
   }).on('end', function () {
     var data = JSON.parse(body.join(''));
-    friends.push(data)
-    res.status(201).send(friends);
+
+
+    var joinedVegs = groceries.vegetables.join('');
+    joinedVegs = joinedVegs.toLowerCase();
+
+    console.log(joinedVegs);
+
+    // change into filter to loop through each item
+
+    if (!(joinedVegs.includes(data.name.toLowerCase()))) {
+      store.push(data.name);
+      groceries.vegetables.push(store);
+      res.status(201).send(store);
+    }
+    else {
+      res.status(422).send('already there');
+    }
+
   });
 });
 
